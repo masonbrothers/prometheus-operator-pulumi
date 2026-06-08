@@ -7,39 +7,46 @@ import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 /**
- * The `Probe` custom resource definition (CRD) defines how to scrape metrics from prober exporters such as the [blackbox exporter](https://github.com/prometheus/blackbox_exporter).
+ * Patch resources are used to modify existing Kubernetes resources by using
+ * Server-Side Apply updates. The name of the resource must be specified, but all other properties are optional. More than
+ * one patch may be applied to the same resource, and a random FieldManager name will be used for each Patch resource.
+ * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
+ * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
+ * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
+ * The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.
+ * Among other things, it allows to specify:
+ * * The services to scrape via label selectors.
+ * * The container ports to scrape.
+ * * Authentication credentials to use.
+ * * Target and metric relabeling.
  *
- * The `Probe` resource needs 2 pieces of information:
- * * The list of probed addresses which can be defined statically or by discovering Kubernetes Ingress objects.
- * * The prober which exposes the availability of probed endpoints (over various protocols such HTTP, TCP, ICMP, ...) as Prometheus metrics.
- *
- * `Prometheus` and `PrometheusAgent` objects select `Probe` objects using label and namespace selectors.
+ * `Prometheus` and `PrometheusAgent` objects select `ServiceMonitor` objects using label and namespace selectors.
  */
-export class Probe extends pulumi.CustomResource {
+export class ServiceMonitorPatch extends pulumi.CustomResource {
     /**
-     * Get an existing Probe resource's state with the given name, ID, and optional extra
+     * Get an existing ServiceMonitorPatch resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Probe {
-        return new Probe(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): ServiceMonitorPatch {
+        return new ServiceMonitorPatch(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1:Probe';
+    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1:ServiceMonitorPatch';
 
     /**
-     * Returns true if the given object is an instance of Probe.  This is designed to work even
+     * Returns true if the given object is an instance of ServiceMonitorPatch.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is Probe {
+    public static isInstance(obj: any): obj is ServiceMonitorPatch {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === Probe.__pulumiType;
+        return obj['__pulumiType'] === ServiceMonitorPatch.__pulumiType;
     }
 
     /**
@@ -49,27 +56,27 @@ export class Probe extends pulumi.CustomResource {
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly kind: pulumi.Output<"Probe">;
+    declare public readonly kind: pulumi.Output<"ServiceMonitor">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.ProbeSpec>;
-    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.ProbeStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.ServiceMonitorSpecPatch>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.ServiceMonitorStatusPatch>;
 
     /**
-     * Create a Probe resource with the given unique name, arguments, and options.
+     * Create a ServiceMonitorPatch resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProbeArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: ServiceMonitorPatchArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
-            resourceInputs["kind"] = "Probe";
+            resourceInputs["kind"] = "ServiceMonitor";
             resourceInputs["metadata"] = args?.metadata;
             resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
@@ -81,14 +88,14 @@ export class Probe extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(Probe.__pulumiType, name, resourceInputs, opts);
+        super(ServiceMonitorPatch.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a Probe resource.
+ * The set of arguments for constructing a ServiceMonitorPatch resource.
  */
-export interface ProbeArgs {
+export interface ServiceMonitorPatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
@@ -96,10 +103,10 @@ export interface ProbeArgs {
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"Probe" | undefined>;
+    kind?: pulumi.Input<"ServiceMonitor" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
-    spec?: pulumi.Input<inputs.monitoring.v1.ProbeSpec | undefined>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1.ServiceMonitorSpecPatch | undefined>;
 }

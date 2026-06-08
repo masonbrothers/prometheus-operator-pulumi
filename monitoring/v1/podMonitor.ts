@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * The `PodMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of pods.
  * Among other things, it allows to specify:
@@ -45,22 +43,20 @@ export class PodMonitor extends pulumi.CustomResource {
         return obj['__pulumiType'] === PodMonitor.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"monitoring.coreos.com/v1" | undefined>;
-    public readonly kind!: pulumi.Output<"PodMonitor" | undefined>;
-    public readonly metadata!: pulumi.Output<ObjectMeta | undefined>;
     /**
-     * spec defines the specification of desired Pod selection for target discovery by Prometheus.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly spec!: pulumi.Output<outputs.monitoring.v1.PodMonitorSpec>;
+    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1">;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the PodMonitor. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly status!: pulumi.Output<outputs.monitoring.v1.PodMonitorStatus | undefined>;
+    declare public readonly kind: pulumi.Output<"PodMonitor">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.PodMonitorSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.PodMonitorStatus>;
 
     /**
      * Create a PodMonitor resource with the given unique name, arguments, and options.
@@ -75,9 +71,9 @@ export class PodMonitor extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
             resourceInputs["kind"] = "PodMonitor";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -94,20 +90,17 @@ export class PodMonitor extends pulumi.CustomResource {
  * The set of arguments for constructing a PodMonitor resource.
  */
 export interface PodMonitorArgs {
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1">;
-    kind?: pulumi.Input<"PodMonitor">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * spec defines the specification of desired Pod selection for target discovery by Prometheus.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.monitoring.v1.PodMonitorSpecArgs>;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the PodMonitor. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    status?: pulumi.Input<inputs.monitoring.v1.PodMonitorStatusArgs>;
+    kind?: pulumi.Input<"PodMonitor" | undefined>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1.PodMonitorSpec | undefined>;
 }

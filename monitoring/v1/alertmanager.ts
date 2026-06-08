@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * The `Alertmanager` custom resource definition (CRD) defines a desired [Alertmanager](https://prometheus.io/docs/alerting) setup to run in a Kubernetes cluster. It allows to specify many options such as the number of replicas, persistent storage and many more.
  *
@@ -42,20 +40,20 @@ export class Alertmanager extends pulumi.CustomResource {
         return obj['__pulumiType'] === Alertmanager.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"monitoring.coreos.com/v1" | undefined>;
-    public readonly kind!: pulumi.Output<"Alertmanager" | undefined>;
-    public readonly metadata!: pulumi.Output<ObjectMeta | undefined>;
     /**
-     * spec defines the specification of the desired behavior of the Alertmanager cluster. More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly spec!: pulumi.Output<outputs.monitoring.v1.AlertmanagerSpec>;
+    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1">;
     /**
-     * status defines the most recent observed status of the Alertmanager cluster. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly status!: pulumi.Output<outputs.monitoring.v1.AlertmanagerStatus | undefined>;
+    declare public readonly kind: pulumi.Output<"Alertmanager">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.AlertmanagerSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.AlertmanagerStatus>;
 
     /**
      * Create a Alertmanager resource with the given unique name, arguments, and options.
@@ -70,9 +68,9 @@ export class Alertmanager extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
             resourceInputs["kind"] = "Alertmanager";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? (args.spec ? pulumi.output(args.spec).apply(inputs.monitoring.v1.alertmanagerSpecArgsProvideDefaults) : undefined) : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -89,18 +87,17 @@ export class Alertmanager extends pulumi.CustomResource {
  * The set of arguments for constructing a Alertmanager resource.
  */
 export interface AlertmanagerArgs {
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1">;
-    kind?: pulumi.Input<"Alertmanager">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * spec defines the specification of the desired behavior of the Alertmanager cluster. More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.monitoring.v1.AlertmanagerSpecArgs>;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
     /**
-     * status defines the most recent observed status of the Alertmanager cluster. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    status?: pulumi.Input<inputs.monitoring.v1.AlertmanagerStatusArgs>;
+    kind?: pulumi.Input<"Alertmanager" | undefined>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1.AlertmanagerSpec | undefined>;
 }

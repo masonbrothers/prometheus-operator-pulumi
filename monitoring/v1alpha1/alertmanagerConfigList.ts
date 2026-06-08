@@ -7,34 +7,33 @@ import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 /**
- * AlertmanagerConfig configures the Prometheus Alertmanager,
- * specifying how alerts should be grouped, inhibited and notified to external systems.
+ * AlertmanagerConfigList is a list of AlertmanagerConfig
  */
-export class AlertmanagerConfig extends pulumi.CustomResource {
+export class AlertmanagerConfigList extends pulumi.CustomResource {
     /**
-     * Get an existing AlertmanagerConfig resource's state with the given name, ID, and optional extra
+     * Get an existing AlertmanagerConfigList resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): AlertmanagerConfig {
-        return new AlertmanagerConfig(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): AlertmanagerConfigList {
+        return new AlertmanagerConfigList(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1alpha1:AlertmanagerConfig';
+    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1alpha1:AlertmanagerConfigList';
 
     /**
-     * Returns true if the given object is an instance of AlertmanagerConfig.  This is designed to work even
+     * Returns true if the given object is an instance of AlertmanagerConfigList.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is AlertmanagerConfig {
+    public static isInstance(obj: any): obj is AlertmanagerConfigList {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === AlertmanagerConfig.__pulumiType;
+        return obj['__pulumiType'] === AlertmanagerConfigList.__pulumiType;
     }
 
     /**
@@ -42,59 +41,65 @@ export class AlertmanagerConfig extends pulumi.CustomResource {
      */
     declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1alpha1">;
     /**
+     * List of alertmanagerconfigs. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
+     */
+    declare public readonly items: pulumi.Output<outputs.monitoring.v1alpha1.AlertmanagerConfig[]>;
+    /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly kind: pulumi.Output<"AlertmanagerConfig">;
+    declare public readonly kind: pulumi.Output<"AlertmanagerConfigList">;
     /**
-     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    declare public readonly spec: pulumi.Output<outputs.monitoring.v1alpha1.AlertmanagerConfigSpec>;
-    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1alpha1.AlertmanagerConfigStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ListMeta>;
 
     /**
-     * Create a AlertmanagerConfig resource with the given unique name, arguments, and options.
+     * Create a AlertmanagerConfigList resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: AlertmanagerConfigArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: AlertmanagerConfigListArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            if (args?.items === undefined && !opts.urn) {
+                throw new Error("Missing required property 'items'");
+            }
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1alpha1";
-            resourceInputs["kind"] = "AlertmanagerConfig";
+            resourceInputs["items"] = args?.items;
+            resourceInputs["kind"] = "AlertmanagerConfigList";
             resourceInputs["metadata"] = args?.metadata;
-            resourceInputs["spec"] = args?.spec;
-            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
+            resourceInputs["items"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
             resourceInputs["metadata"] = undefined /*out*/;
-            resourceInputs["spec"] = undefined /*out*/;
-            resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(AlertmanagerConfig.__pulumiType, name, resourceInputs, opts);
+        super(AlertmanagerConfigList.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a AlertmanagerConfig resource.
+ * The set of arguments for constructing a AlertmanagerConfigList resource.
  */
-export interface AlertmanagerConfigArgs {
+export interface AlertmanagerConfigListArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
     apiVersion?: pulumi.Input<"monitoring.coreos.com/v1alpha1" | undefined>;
     /**
+     * List of alertmanagerconfigs. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
+     */
+    items: pulumi.Input<pulumi.Input<inputs.monitoring.v1alpha1.AlertmanagerConfig>[]>;
+    /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"AlertmanagerConfig" | undefined>;
+    kind?: pulumi.Input<"AlertmanagerConfigList" | undefined>;
     /**
-     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
-    spec?: pulumi.Input<inputs.monitoring.v1alpha1.AlertmanagerConfigSpec | undefined>;
+    metadata?: pulumi.Input<inputs.meta.v1.ListMeta | undefined>;
 }

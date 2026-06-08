@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.
  * Among other things, it allows to specify:
@@ -45,23 +43,20 @@ export class ServiceMonitor extends pulumi.CustomResource {
         return obj['__pulumiType'] === ServiceMonitor.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"monitoring.coreos.com/v1" | undefined>;
-    public readonly kind!: pulumi.Output<"ServiceMonitor" | undefined>;
-    public readonly metadata!: pulumi.Output<ObjectMeta | undefined>;
     /**
-     * spec defines the specification of desired Service selection for target discovery by
-     * Prometheus.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly spec!: pulumi.Output<outputs.monitoring.v1.ServiceMonitorSpec>;
+    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1">;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the ServiceMonitor. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly status!: pulumi.Output<outputs.monitoring.v1.ServiceMonitorStatus | undefined>;
+    declare public readonly kind: pulumi.Output<"ServiceMonitor">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.ServiceMonitorSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.ServiceMonitorStatus>;
 
     /**
      * Create a ServiceMonitor resource with the given unique name, arguments, and options.
@@ -76,9 +71,9 @@ export class ServiceMonitor extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
             resourceInputs["kind"] = "ServiceMonitor";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -95,21 +90,17 @@ export class ServiceMonitor extends pulumi.CustomResource {
  * The set of arguments for constructing a ServiceMonitor resource.
  */
 export interface ServiceMonitorArgs {
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1">;
-    kind?: pulumi.Input<"ServiceMonitor">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * spec defines the specification of desired Service selection for target discovery by
-     * Prometheus.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.monitoring.v1.ServiceMonitorSpecArgs>;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the ServiceMonitor. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    status?: pulumi.Input<inputs.monitoring.v1.ServiceMonitorStatusArgs>;
+    kind?: pulumi.Input<"ServiceMonitor" | undefined>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1.ServiceMonitorSpec | undefined>;
 }

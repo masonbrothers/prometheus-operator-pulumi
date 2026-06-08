@@ -7,69 +7,71 @@ import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 /**
- * The `Probe` custom resource definition (CRD) defines how to scrape metrics from prober exporters such as the [blackbox exporter](https://github.com/prometheus/blackbox_exporter).
+ * Patch resources are used to modify existing Kubernetes resources by using
+ * Server-Side Apply updates. The name of the resource must be specified, but all other properties are optional. More than
+ * one patch may be applied to the same resource, and a random FieldManager name will be used for each Patch resource.
+ * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
+ * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
+ * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
+ * The `PrometheusAgent` custom resource definition (CRD) defines a desired [Prometheus Agent](https://prometheus.io/blog/2021/11/16/agent/) setup to run in a Kubernetes cluster.
  *
- * The `Probe` resource needs 2 pieces of information:
- * * The list of probed addresses which can be defined statically or by discovering Kubernetes Ingress objects.
- * * The prober which exposes the availability of probed endpoints (over various protocols such HTTP, TCP, ICMP, ...) as Prometheus metrics.
- *
- * `Prometheus` and `PrometheusAgent` objects select `Probe` objects using label and namespace selectors.
+ * The CRD is very similar to the `Prometheus` CRD except for features which aren't available in agent mode like rule evaluation, persistent storage and Thanos sidecar.
  */
-export class Probe extends pulumi.CustomResource {
+export class PrometheusAgentPatch extends pulumi.CustomResource {
     /**
-     * Get an existing Probe resource's state with the given name, ID, and optional extra
+     * Get an existing PrometheusAgentPatch resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Probe {
-        return new Probe(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): PrometheusAgentPatch {
+        return new PrometheusAgentPatch(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1:Probe';
+    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1alpha1:PrometheusAgentPatch';
 
     /**
-     * Returns true if the given object is an instance of Probe.  This is designed to work even
+     * Returns true if the given object is an instance of PrometheusAgentPatch.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is Probe {
+    public static isInstance(obj: any): obj is PrometheusAgentPatch {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === Probe.__pulumiType;
+        return obj['__pulumiType'] === PrometheusAgentPatch.__pulumiType;
     }
 
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1">;
+    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1alpha1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly kind: pulumi.Output<"Probe">;
+    declare public readonly kind: pulumi.Output<"PrometheusAgent">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.ProbeSpec>;
-    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.ProbeStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1alpha1.PrometheusAgentSpecPatch>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1alpha1.PrometheusAgentStatusPatch>;
 
     /**
-     * Create a Probe resource with the given unique name, arguments, and options.
+     * Create a PrometheusAgentPatch resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProbeArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: PrometheusAgentPatchArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
-            resourceInputs["kind"] = "Probe";
+            resourceInputs["apiVersion"] = "monitoring.coreos.com/v1alpha1";
+            resourceInputs["kind"] = "PrometheusAgent";
             resourceInputs["metadata"] = args?.metadata;
             resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
@@ -81,25 +83,25 @@ export class Probe extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(Probe.__pulumiType, name, resourceInputs, opts);
+        super(PrometheusAgentPatch.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a Probe resource.
+ * The set of arguments for constructing a PrometheusAgentPatch resource.
  */
-export interface ProbeArgs {
+export interface PrometheusAgentPatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1alpha1" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"Probe" | undefined>;
+    kind?: pulumi.Input<"PrometheusAgent" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
-    spec?: pulumi.Input<inputs.monitoring.v1.ProbeSpec | undefined>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1alpha1.PrometheusAgentSpecPatch | undefined>;
 }

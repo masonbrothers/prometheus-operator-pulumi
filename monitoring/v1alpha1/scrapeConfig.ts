@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * ScrapeConfig defines a namespaced Prometheus scrape_config to be aggregated across
  * multiple namespaces into the Prometheus configuration.
@@ -39,22 +37,20 @@ export class ScrapeConfig extends pulumi.CustomResource {
         return obj['__pulumiType'] === ScrapeConfig.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"monitoring.coreos.com/v1alpha1" | undefined>;
-    public readonly kind!: pulumi.Output<"ScrapeConfig" | undefined>;
-    public readonly metadata!: pulumi.Output<ObjectMeta | undefined>;
     /**
-     * spec defines the specification of ScrapeConfigSpec.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly spec!: pulumi.Output<outputs.monitoring.v1alpha1.ScrapeConfigSpec>;
+    declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1alpha1">;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the ScrapeConfig. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly status!: pulumi.Output<outputs.monitoring.v1alpha1.ScrapeConfigStatus | undefined>;
+    declare public readonly kind: pulumi.Output<"ScrapeConfig">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.monitoring.v1alpha1.ScrapeConfigSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1alpha1.ScrapeConfigStatus>;
 
     /**
      * Create a ScrapeConfig resource with the given unique name, arguments, and options.
@@ -69,9 +65,9 @@ export class ScrapeConfig extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1alpha1";
             resourceInputs["kind"] = "ScrapeConfig";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? (args.spec ? pulumi.output(args.spec).apply(inputs.monitoring.v1alpha1.scrapeConfigSpecArgsProvideDefaults) : undefined) : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -88,20 +84,17 @@ export class ScrapeConfig extends pulumi.CustomResource {
  * The set of arguments for constructing a ScrapeConfig resource.
  */
 export interface ScrapeConfigArgs {
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1alpha1">;
-    kind?: pulumi.Input<"ScrapeConfig">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * spec defines the specification of ScrapeConfigSpec.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.monitoring.v1alpha1.ScrapeConfigSpecArgs>;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1alpha1" | undefined>;
     /**
-     * status defines the status subresource. It is under active development and is updated only when the
-     * "StatusForConfigurationResources" feature gate is enabled.
-     *
-     * Most recent observed status of the ScrapeConfig. Read-only.
-     * More info:
-     * https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    status?: pulumi.Input<inputs.monitoring.v1alpha1.ScrapeConfigStatusArgs>;
+    kind?: pulumi.Input<"ScrapeConfig" | undefined>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1alpha1.ScrapeConfigSpec | undefined>;
 }

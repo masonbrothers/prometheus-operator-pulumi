@@ -7,39 +7,33 @@ import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 /**
- * The `Probe` custom resource definition (CRD) defines how to scrape metrics from prober exporters such as the [blackbox exporter](https://github.com/prometheus/blackbox_exporter).
- *
- * The `Probe` resource needs 2 pieces of information:
- * * The list of probed addresses which can be defined statically or by discovering Kubernetes Ingress objects.
- * * The prober which exposes the availability of probed endpoints (over various protocols such HTTP, TCP, ICMP, ...) as Prometheus metrics.
- *
- * `Prometheus` and `PrometheusAgent` objects select `Probe` objects using label and namespace selectors.
+ * AlertmanagerList is a list of Alertmanager
  */
-export class Probe extends pulumi.CustomResource {
+export class AlertmanagerList extends pulumi.CustomResource {
     /**
-     * Get an existing Probe resource's state with the given name, ID, and optional extra
+     * Get an existing AlertmanagerList resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Probe {
-        return new Probe(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): AlertmanagerList {
+        return new AlertmanagerList(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1:Probe';
+    public static readonly __pulumiType = 'kubernetes:monitoring.coreos.com/v1:AlertmanagerList';
 
     /**
-     * Returns true if the given object is an instance of Probe.  This is designed to work even
+     * Returns true if the given object is an instance of AlertmanagerList.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is Probe {
+    public static isInstance(obj: any): obj is AlertmanagerList {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === Probe.__pulumiType;
+        return obj['__pulumiType'] === AlertmanagerList.__pulumiType;
     }
 
     /**
@@ -47,59 +41,65 @@ export class Probe extends pulumi.CustomResource {
      */
     declare public readonly apiVersion: pulumi.Output<"monitoring.coreos.com/v1">;
     /**
+     * List of alertmanagers. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
+     */
+    declare public readonly items: pulumi.Output<outputs.monitoring.v1.Alertmanager[]>;
+    /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly kind: pulumi.Output<"Probe">;
+    declare public readonly kind: pulumi.Output<"AlertmanagerList">;
     /**
-     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    declare public readonly spec: pulumi.Output<outputs.monitoring.v1.ProbeSpec>;
-    declare public /*out*/ readonly status: pulumi.Output<outputs.monitoring.v1.ProbeStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ListMeta>;
 
     /**
-     * Create a Probe resource with the given unique name, arguments, and options.
+     * Create a AlertmanagerList resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProbeArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: AlertmanagerListArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            if (args?.items === undefined && !opts.urn) {
+                throw new Error("Missing required property 'items'");
+            }
             resourceInputs["apiVersion"] = "monitoring.coreos.com/v1";
-            resourceInputs["kind"] = "Probe";
+            resourceInputs["items"] = args?.items;
+            resourceInputs["kind"] = "AlertmanagerList";
             resourceInputs["metadata"] = args?.metadata;
-            resourceInputs["spec"] = args?.spec;
-            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
+            resourceInputs["items"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
             resourceInputs["metadata"] = undefined /*out*/;
-            resourceInputs["spec"] = undefined /*out*/;
-            resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(Probe.__pulumiType, name, resourceInputs, opts);
+        super(AlertmanagerList.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a Probe resource.
+ * The set of arguments for constructing a AlertmanagerList resource.
  */
-export interface ProbeArgs {
+export interface AlertmanagerListArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
     apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
     /**
+     * List of alertmanagers. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
+     */
+    items: pulumi.Input<pulumi.Input<inputs.monitoring.v1.Alertmanager>[]>;
+    /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"Probe" | undefined>;
+    kind?: pulumi.Input<"AlertmanagerList" | undefined>;
     /**
-     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
-    spec?: pulumi.Input<inputs.monitoring.v1.ProbeSpec | undefined>;
+    metadata?: pulumi.Input<inputs.meta.v1.ListMeta | undefined>;
 }
