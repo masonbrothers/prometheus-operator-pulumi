@@ -46,12 +46,8 @@ pnpm generate:crds
 
 The CRDs currently come from Prometheus Operator `v0.91.0`.
 
-For local regeneration, clone `masonbrothers/crd2pulumi-package-tools` as a
-sibling directory:
-
-```sh
-git clone git@github.com:masonbrothers/crd2pulumi-package-tools.git ../crd2pulumi-package-tools
-```
+Local regeneration uses the shared `crd2pulumi-package-tools` package installed
+by `pnpm install`; `crd2pulumi` must also be available on `PATH`.
 
 ## Publish
 
